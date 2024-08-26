@@ -3,11 +3,12 @@
 from typing import Dict
 
 import numpy as np
+import xml.etree.ElementTree as ET
 from sensor_calibration_manager.calibrator_base import CalibratorBase
 from sensor_calibration_manager.calibrator_registry import CalibratorRegistry
 from sensor_calibration_manager.ros_interface import RosInterface
 from sensor_calibration_manager.types import FramePair
-
+from scipy.spatial.transform import Rotation as R
 
 @CalibratorRegistry.register_calibrator(
     project_name="lxo", calibrator_name="camera_lidar_tag_based_pnp_calibrator"
@@ -57,6 +58,11 @@ class CameraLidarTagBasedPNPCalibrator(CalibratorBase):
         # Compute camera_sensor -> camera_optical 
         camera_sensor_to_camera_optical_transform = camera_sensor_to_lidar_transform@lidar_to_optical_link_transform
     
+        # Print XML xacro macro
+        self.print_xacro_macro_xml(camera_sensor_to_camera_optical_transform,
+                                   f'camera_{self.cam_name}_sensor',
+                                   f'camera_{self.cam_name}_optical')
+        
         # Set results TF dictionary
         result = {
             f'camera_{self.cam_name}_sensor': {
@@ -68,3 +74,63 @@ class CameraLidarTagBasedPNPCalibrator(CalibratorBase):
         }
         
         return result
+    
+    def print_xacro_macro_xml(self, transform, parent, child):
+        
+        # Create the root element
+        camera_mount_tree = ET.Element("xacro:camera_mount", name=child, parent=parent)
+        # Extract xyz and rpy
+        xyz, rpy = self.extract_xyz_rpy_str(transform)
+        
+        # Create the origin element and set its attributes
+        origin = ET.SubElement(camera_mount_tree, "origin", xyz=xyz, rpy=rpy)
+
+        # Indent tree
+        self.indent(camera_mount_tree)
+        
+        # Convert the ElementTree to a string
+        camera_mount_xml = ET.tostring(camera_mount_tree, encoding='unicode', method='xml')
+
+        # Define the ANSI escape codes for colors
+        BRIGHT_WHITE = '\033[97m'
+        BRIGHT_GREEN = '\033[92m'
+        BRIGHT_CYAN = '\033[96m'
+        RESET = '\033[0m'
+
+        # Print the XML string
+        print(f'\n{BRIGHT_GREEN}Transformation from {BRIGHT_WHITE}{parent} {BRIGHT_GREEN}'
+            f'to {BRIGHT_WHITE}{child} {BRIGHT_GREEN}has been computed.\n'
+            f'Please add the following XML snippet to the file:\n'
+            f'av_car_description/urdf/mondeo_dca/mondeo_dca_sensors.xacro\n'
+            f'{BRIGHT_CYAN}{camera_mount_xml}{RESET}')
+    
+    def extract_xyz_rpy_str(self, T):
+        # Extract translation
+        translation = T[:3, 3]
+        xyz = " ".join(f"{val:.6g}" for val in translation)
+        
+        # Extract rotation and convert to rpy
+        rotation_matrix = T[:3, :3]
+        r = R.from_matrix(rotation_matrix)
+        rpy = r.as_euler('xyz', degrees=False)  # Roll, pitch, yaw in radians
+        rpy_str = " ".join(f"{val:.6g}" for val in rpy)
+        
+        return xyz, rpy_str
+    
+    def indent(self, elem, level=0):
+        # Add indentation
+        indent_size = "  "
+        i = "\n" + level * indent_size
+        if len(elem):
+            if not elem.text or not elem.text.strip():
+                elem.text = i + indent_size
+            if not elem.tail or not elem.tail.strip():
+                elem.tail = i
+            for elem in elem:
+                self.indent(elem, level + 1)
+            if not elem.tail or not elem.tail.strip():
+                elem.tail = i
+        else:
+            if level and (not elem.tail or not elem.tail.strip()):
+                elem.tail = i
+        

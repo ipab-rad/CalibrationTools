@@ -31,14 +31,7 @@ class CameraLidarTagBasedPNPCalibrator(CalibratorBase):
                 f'camera_{self.cam_name}_optical',
             ]
         )
-        # self.required_frames.append(f'camera_{self.cam_name}_optical')
-        # self.required_frames.append(self.lidar_frame)
-
-        # vehicle_roof_datum
-        #   lidar_ouster_top
-        #   camera_fsp_l_mount
-        #       camera_fsp_l_sensor
-        #           camera_fsp_l_optical
+        
         self.add_calibrator(
             service_name="calibrate_camera_lidar",
             expected_calibration_frames=[
@@ -46,28 +39,32 @@ class CameraLidarTagBasedPNPCalibrator(CalibratorBase):
             ],
         )
 
-    # def post_process(self, calibration_transforms: Dict[str, Dict[str, np.array]]):
-    #     optical_link_to_lidar_transform = calibration_transforms[
-    #         f"{self.camera_name}/camera_optical_link"
-    #     ][self.lidar_frame]
+    def post_process(self, calibration_transforms: Dict[str, Dict[str, np.array]]):
+        
+        # Get camera optical -> lidar tf from the calibration result
+        optical_link_to_lidar_transform = calibration_transforms[
+            f"camera_{self.cam_name}_optical"
+        ][self.lidar_frame]
+    
+        # Invert calibration result to get lidar -> camera_optical
+        lidar_to_optical_link_transform = np.linalg.inv(optical_link_to_lidar_transform)
 
-    #     sensor_kit_to_lidar_transform = self.get_transform_matrix(
-    #         self.sensor_kit_frame, self.lidar_frame
-    #     )
-
-    #     camera_to_optical_link_transform = self.get_transform_matrix(
-    #         f"{self.camera_name}/camera_link", f"{self.camera_name}/camera_optical_link"
-    #     )
-
-    #     sensor_kit_camera_link_transform = np.linalg.inv(
-    #         camera_to_optical_link_transform
-    #         @ optical_link_to_lidar_transform
-    #         @ np.linalg.inv(sensor_kit_to_lidar_transform)
-    #     )
-
-    #     result = {
-    #         self.sensor_kit_frame: {
-    #             f"{self.camera_name}/camera_link": sensor_kit_camera_link_transform
-    #         }
-    #     }
-    #     return result
+        # Get camera_sensor -> lidar_frame transform from ROS2 TF
+        camera_sensor_to_lidar_transform = self.get_transform_matrix(
+            f'camera_{self.cam_name}_mount',  self.lidar_frame
+        )
+        
+        # Compute camera_sensor -> camera_optical 
+        camera_sensor_to_camera_optical_transform = camera_sensor_to_lidar_transform@lidar_to_optical_link_transform
+    
+        # Set results TF dictionary
+        result = {
+            f'camera_{self.cam_name}_sensor': {
+                f'camera_{self.cam_name}_optical': camera_sensor_to_camera_optical_transform
+            },
+            f'camera_{self.cam_name}_optical': {
+                f'{self.lidar_frame}': optical_link_to_lidar_transform
+            }
+        }
+        
+        return result

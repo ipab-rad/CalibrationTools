@@ -52,6 +52,5 @@ docker run -it --rm --net host --privileged \
     -v /tmp:/tmp \
     -v /etc/localtime:/etc/localtime:ro \
     -v ./cyclone_dds.xml:/workspace/cyclone_dds.xml \
-    -v ./find_pkgs.sh:/workspace/find_pkgs.sh \
     -v ./calibrators:/workspace/src/calibration_tools/calibrators \
     calibration_tools:latest-dev 

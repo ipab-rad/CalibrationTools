@@ -1,10 +1,4 @@
 repositories:
-  calibration_tools:
-    type: git
-    url: https://github.com/ipab-rad/CalibrationTools.git
-    version: feature/new_api_documentation
-    # url: https://github.com/tier4/CalibrationTools.git
-    # version: feature/new_api_documentation
   autoware/common:
     type: git
     url: https://github.com/autowarefoundation/autoware_common.git
@@ -25,12 +19,10 @@ repositories:
     type: git
     url: https://github.com/autowarefoundation/autoware.universe.git
     version: 4cec64501cec5f60b7838eed6fb6c47f17573187
-    # url: git@github.com:ipab-rad/autoware.universe.git
-    # version: main
   vendor/lidartag:
     type: git
     url: https://github.com/tier4/LiDARTag.git
-    version: humble
+    version: aba7dac1c3b49dce47ba8d22171580c5abd9fb01
   vendor/lidartag_msgs:
     type: git
     url: https://github.com/tier4/LiDARTag_msgs.git

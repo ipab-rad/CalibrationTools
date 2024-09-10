@@ -16,8 +16,11 @@ WORKDIR /workspace
 
 RUN mkdir -p /workspace/src
 COPY ./calibration_tools_standalone_tartan.repos ./
-COPY ./find_pkgs.sh ./
 COPY ./cyclone_dds.xml ./
+COPY ./calibrators ./src/calibrators/
+COPY ./common ./src/common/
+COPY ./sensor_calibration_tools ./src/sensor_calibration_tools/
+COPY ./system ./src/system/
 
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 

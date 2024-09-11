@@ -30,7 +30,7 @@
     <!-- filtering parameters -->
     <param name="min_tag_size" value="0.6"/>
     <!--0.6 = 0.8 * 0.75 the apriltag size, not the lidartag-->
-    <param name="max_tag_distance" value="20.0"/>
+    <param name="max_tag_distance" value="40.0"/>
     <param name="max_allowed_homography_error" value="0.5"/>
     <param name="use_receive_time" value="$(var use_receive_time)"/>
     <param name="use_rectified_image" value="$(var use_rectified_image)"/>
@@ -40,11 +40,11 @@
     <!-- the calibration finishes only after enough calibration pairs have been collected -->
     <param name="calibration_convergence_min_area_percentage" value="0.005"/>
     <param name="min_pnp_points" value="8"/>
-    <param name="min_convergence_time" value="6.0"/>
+    <param name="min_convergence_time" value="3.0"/>
     <param name="max_no_observation_time" value="3.0"/>
     <param name="new_hypothesis_distance" value="$(var calibration_pairs_min_distance)"/>
-    <param name="tag_ids" value="[0, 1, 2, 3, 4, 5]"/>
-    <param name="tag_sizes" value="[0.61, 0.61, 0.61, 0.61, 0.61, 0.61]"/>
+    <param name="tag_ids" value="[0, 1]"/>
+    <param name="tag_sizes" value="[0.61, 0.61]"/>
     <!-- the sizes of the corresponding tag_ids - size of the black frame only  -->
 
     <param name="lidartag_max_convergence_translation" value="0.05"/>

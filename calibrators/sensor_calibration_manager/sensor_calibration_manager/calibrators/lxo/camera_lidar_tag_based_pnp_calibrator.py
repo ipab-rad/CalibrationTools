@@ -52,7 +52,7 @@ class CameraLidarTagBasedPNPCalibrator(CalibratorBase):
 
         # Get camera_sensor -> lidar_frame transform from ROS2 TF
         camera_sensor_to_lidar_transform = self.get_transform_matrix(
-            f'camera_{self.cam_name}_mount',  self.lidar_frame
+            f'camera_{self.cam_name}_sensor',  self.lidar_frame
         )
         
         # Compute camera_sensor -> camera_optical 

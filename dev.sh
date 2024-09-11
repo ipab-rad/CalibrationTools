@@ -52,5 +52,8 @@ docker run -it --rm --net host --privileged \
     -v /tmp:/tmp \
     -v /etc/localtime:/etc/localtime:ro \
     -v ./cyclone_dds.xml:/workspace/cyclone_dds.xml \
-    -v ./calibrators:/workspace/src/calibration_tools/calibrators \
-    calibration_tools:latest-dev 
+    -v ./calibrators:/workspace/src/calibrators \
+    -v ./common:/workspace/src/common \
+    -v ./sensor_calibration_tools:/workspace/src/sensor_calibration_tools \
+    -v ./system:/workspace/src/system \
+    calibration_tools:latest-dev

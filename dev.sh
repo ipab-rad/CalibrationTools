@@ -45,6 +45,8 @@ SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 
 # Run docker image with local code volumes for development
 docker run -it --rm --net host --privileged \
+    --gpus all \
+    -e NVIDIA_DRIVER_CAPABILITIES=all \
     ${MOUNT_X} \
     -e XAUTHORITY="${XAUTHORITY}" \
     -e XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" \

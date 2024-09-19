@@ -3,17 +3,22 @@
 # Build docker dev stage and add local code for live development
 # ----------------------------------------------------------------
 
+
+# Default cyclone_dds.xml path
+CYCLONE_DIR=/home/$USER/cyclone_dds.xml
+CYCLONE_VOL="-v $CYCLONE_DIR:/workspace/cyclone_dds.xml"
+
 # Default value for headless
 headless=false
 
 # Function to print usage
 usage() {
-    echo "Usage: dev.sh [--headless] [--help | -h]"
-    echo ""
-    echo "Options:"
-    echo "  --headless     Run the Docker image without X11 forwarding"
-    echo "  --help, -h     Display this help message and exit."
-    echo ""
+    echo "
+Usage: dev.sh [--headless] [--help | -h]
+
+Options:
+  --headless     Run the Docker image without X11 forwarding
+  --help, -h     Display this help message and exit."
 }
 
 # Parse command-line options
@@ -31,8 +36,13 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-
-
+# Verify CYCLONE_DIR exists
+if [ -n "$CYCLONE_VOL" ]; then
+    if [ ! -f "$CYCLONE_DIR" ]; then
+        echo "$CYCLONE_DIR does not exist! This scirpt requires a cyclone_dds.xml file in HOME dir"
+        exit 1
+    fi
+fi
 
 MOUNT_X=""
 if [ "$headless" = "false" ]; then
@@ -55,10 +65,10 @@ docker run -it --rm --net host --privileged \
     -v /dev:/dev \
     -v /tmp:/tmp \
     -v /etc/localtime:/etc/localtime:ro \
-    -v ./cyclone_dds.xml:/workspace/cyclone_dds.xml \
     -v ./calibrators:/workspace/src/calibrators \
     -v ./common:/workspace/src/common \
     -v ./sensor_calibration_tools:/workspace/src/sensor_calibration_tools \
     -v ./system:/workspace/src/system \
     -v ./calib_data:/workspace/calib_data \
+    $CYCLONE_VOL \
     calibration_tools:latest-dev

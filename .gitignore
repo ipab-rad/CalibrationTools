@@ -9,3 +9,6 @@ log/
 
 # Python
 *.pyc
+
+# Calib data dir
+*calib_data*

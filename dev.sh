@@ -43,6 +43,8 @@ fi
 # Get the absolute path of the script
 SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 
+mkdir -p $SCRIPT_DIR/calib_data
+
 # Run docker image with local code volumes for development
 docker run -it --rm --net host --privileged \
     --gpus all \
@@ -58,4 +60,5 @@ docker run -it --rm --net host --privileged \
     -v ./common:/workspace/src/common \
     -v ./sensor_calibration_tools:/workspace/src/sensor_calibration_tools \
     -v ./system:/workspace/src/system \
+    -v ./calib_data:/workspace/calib_data \
     calibration_tools:latest-dev

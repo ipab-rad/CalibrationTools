@@ -12,8 +12,9 @@
   <arg name="calibration_service_name" default="extrinsic_calibration"/>
 
   <!-- lidartag detector -->
-  <include file="$(find-pkg-share lidartag)/launch/lidartag_$(var lidar_model).launch.xml">
+  <include file="$(find-pkg-share lidartag)/launch/lidartag.launch.xml">
     <arg name="pointcloud_topic" value="$(var pointcloud_topic)"/>
+    <arg name="lidar_model" value="$(var lidar_model)"/>
   </include>
 
   <!-- apriltag detector -->

@@ -22,7 +22,7 @@ repositories:
   vendor/lidartag:
     type: git
     url: https://github.com/tier4/LiDARTag.git
-    version: aba7dac1c3b49dce47ba8d22171580c5abd9fb01
+    version: 58eb65e8f88ef073db8a4c988d9fa603df688c55
   vendor/lidartag_msgs:
     type: git
     url: https://github.com/tier4/LiDARTag_msgs.git

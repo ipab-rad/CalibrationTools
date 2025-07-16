@@ -14,13 +14,15 @@
 
   <arg name="calibration_lidar_frames" default="[
     lidar_left,
-    lidar_right]"/>
+    lidar_right,
+    lidar_front]"/>
 
   <arg name="calibration_pointcloud_topics" default="[
     /sensor/lidar/left/points,
-    /sensor/lidar/right/points]"/>
+    /sensor/lidar/right/points
+    /sensor/lidar/front/points]"/>
 
-  <arg name="mapping_lidar_frame" default="lidar_ouster_top"/>
+  <arg name="mapping_lidar_frame" default="lidar_top"/>
   <arg name="mapping_pointcloud" default="/sensor/lidar/top/points"/>
   <let name="detected_objects" value="/perception/object_recognition/detection/objects"/>
 

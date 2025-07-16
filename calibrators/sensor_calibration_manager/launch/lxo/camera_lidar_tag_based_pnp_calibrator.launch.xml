@@ -9,11 +9,11 @@
     </arg>
 
     <arg name="pointcloud_topic" default="/sensor/lidar/top/points"/>
-    <arg name="lidar_frame" default="lidar_ouster_top"/>
-    <arg name="lidar_model" default="os1_128" description="this lidar must be supported by the lidartag package"/>
+    <arg name="lidar_frame" default="lidar_top"/>
+    <arg name="lidar_model" default="ot128" description="this lidar must be supported by the lidartag package"/>
     <arg name="view_only_ui" default="true" description="By default we use a minimal UI"/>
     <arg name="calibration_pairs" default="8" description="Number of lidar-image pairs for the calibration to converge"/>
-    <arg name="calibration_pairs_min_distance" default="1.5" description="Minimum allowed between a new detection and current pairs"/>
+    <arg name="calibration_pairs_min_distance" default="1.0" description="Minimum allowed between a new detection and current pairs"/>
 
     <let name="camera_frame" value="camera_$(var camera_name)_optical"/>
     <let name="image_rect_color_compressed_topic" value="/sensor/camera/$(var camera_name)/image_rect_color/compressed"/>

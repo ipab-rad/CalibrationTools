@@ -19,7 +19,7 @@
 
   <arg name="calibration_pointcloud_topics" default="[
     /sensor/lidar/left/points,
-    /sensor/lidar/right/points
+    /sensor/lidar/right/points,
     /sensor/lidar/front/points]"/>
 
   <arg name="mapping_lidar_frame" default="lidar_top"/>
